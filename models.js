@@ -71,9 +71,9 @@ module.exports = class WheelofFate {
             }
             this.twoWeeks.push(currentDay);
 
-            const util = require('util')
+            // const util = require('util')
 
-            console.log(util.inspect(this.twoWeeks, {showHidden: false, depth: null}))  
+            // console.log(util.inspect(this.twoWeeks, {showHidden: false, depth: null}))  
         }
         const util = require('util')
 
