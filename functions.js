@@ -5,6 +5,5 @@ function getRandomInt(max) {
 
 module.exports = function getRandomEngineer(engineers){
     let id = getRandomInt(engineers.length);
-    console.log('AIIIIIIIIIIIIIIICIIIIIIIIIIIIIII=> ' , engineers.length, id);
     return engineers[id];
 }
