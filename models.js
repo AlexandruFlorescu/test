@@ -49,13 +49,17 @@ module.exports = class WheelofFate {
                 if (i>1) {
                     if(_.filter(engineers, eng => eng.name == this.twoWeeks[i-2].supportersToday[0].name).length>0){
                         _.filter(engineers, eng => eng.name == this.twoWeeks[i-2].supportersToday[0].name)[0].hasSupportedRecently = false;
+                        _.filter(engineers, eng => eng.name == this.twoWeeks[i-2].supportersToday[0].name)[0].priority ++;
                     }
                     if(_.filter(engineers, eng => eng.name == this.twoWeeks[i-2].supportersToday[1].name).length>0){
                         _.filter(engineers, eng => eng.name == this.twoWeeks[i-2].supportersToday[1].name)[0].hasSupportedRecently = false;
+                        _.filter(engineers, eng => eng.name == this.twoWeeks[i-2].supportersToday[1].name)[0].priority ++;
+                        
                     }
                 }
                 _.filter(engineers, eng => eng.name == currentEngineer.name)[0].hasSupportedRecently = true;
                 _.filter(engineers, eng => eng.name == currentEngineer.name)[0].NoSupportsThisTwoWeeksSpan += 1 ;
+                _.filter(engineers, eng => eng.name == currentEngineer.name)[0].priority=0;
             
                 currentDay.supportersToday.push(_.filter(engineers, eng => eng.name == currentEngineer.name)[0]);
 
