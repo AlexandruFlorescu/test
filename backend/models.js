@@ -4,13 +4,14 @@ var NoShiftsInSpan = require('./data').NoShiftsInSpan
 var update = require('./data').update
 var engineers = require('./data').engineers
 var _ = require('lodash')
+const { NoShiftsInDay } = require('./data')
 const NoDays = require('./data').NoDays
 getRandomEngineer = require('./functions')
 
 class Engineer {
     // engineer class for selection purposes
     name
-    NoSupportsThisTwoWeeksSpan = 0
+    NoSupportsThisSpan = 0
     hasSupportedRecently = false
     constructor(name){
         this.name = name
@@ -35,46 +36,47 @@ module.exports = class WheelofFate {
 
     }
 
-    twoWeeks = []
+    span = []
 
     
-    allocateTwoWeeks(){
+    allocateSpan(){
         for(let i=0; i<NoDays; i++) {
             let currentDay = new Day(i)
-            while(currentDay.supportersToday.length<2) {
+            while(currentDay.supportersToday.length<NoShiftsInDay) {
                 do {
                    var currentEngineer = getRandomEngineer(engineers)
-                   console.log(currentEngineer)
+                //    console.log(currentEngineer)
                 }
-                while( currentEngineer.hasSupportedRecently || currentEngineer.NoSupportsThisTwoWeeksSpan >= NoShiftsInSpan )
-                
+                while( currentEngineer.hasSupportedRecently || currentEngineer.NoSupportsThisSpan >= NoShiftsInSpan )
+                // console.log(currentEngineer);
                 if (i>=NoDaysLookBehind) {
-                    if(_.filter(engineers, eng => eng.name == this.twoWeeks[i-NoDaysLookBehind].supportersToday[0].name).length>0){
-                        _.filter(engineers, eng => eng.name == this.twoWeeks[i-NoDaysLookBehind].supportersToday[0].name)[0].hasSupportedRecently = false
-                        _.filter(engineers, eng => eng.name == this.twoWeeks[i-NoDaysLookBehind].supportersToday[0].name)[0].priority ++
+                    for (let j=0; j<NoShiftsInDay; j++){
+                        if(_.filter(engineers, eng => eng.name == this.span[i-NoDaysLookBehind].supportersToday[j].name).length>0){
+                            _.filter(engineers, eng => eng.name == this.span[i-NoDaysLookBehind].supportersToday[j].name)[0].hasSupportedRecently = false
+                            _.filter(engineers, eng => eng.name == this.span[i-NoDaysLookBehind].supportersToday[j].name)[0].priority ++
+                        }
                     }
-                    if(_.filter(engineers, eng => eng.name == this.twoWeeks[i-NoDaysLookBehind].supportersToday[1].name).length>0){
-                        _.filter(engineers, eng => eng.name == this.twoWeeks[i-NoDaysLookBehind].supportersToday[1].name)[0].hasSupportedRecently = false
-                        _.filter(engineers, eng => eng.name == this.twoWeeks[i-NoDaysLookBehind].supportersToday[1].name)[0].priority ++
-                        
-                    }
+                    
                 }
+                var minimum = Math.min.apply(Math, engineers.map(function(x){return x.NoSupportsThisSpan}))
+                    
+                engineers.map(eng =>  {
+                    if(eng.NoSupportsThisSpan == minimum)
+                        eng.priority ++
+                })
                 _.filter(engineers, eng => eng.name == currentEngineer.name)[0].hasSupportedRecently = true
-                _.filter(engineers, eng => eng.name == currentEngineer.name)[0].NoSupportsThisTwoWeeksSpan += 1 
+                _.filter(engineers, eng => eng.name == currentEngineer.name)[0].NoSupportsThisSpan += 1 
                 _.filter(engineers, eng => eng.name == currentEngineer.name)[0].priority=0
             
                 currentDay.supportersToday.push(_.filter(engineers, eng => eng.name == currentEngineer.name)[0])
 
 
-                engineers = engineers.filter(eng => eng.NoSupportsThisTwoWeeksSpan<2)
+                engineers = engineers.filter(eng => eng.NoSupportsThisSpan<NoShiftsInSpan)
                 update(engineers)
                
 
             }
-            this.twoWeeks.push(currentDay)
+            this.span.push(currentDay)
         }
-        const util = require('util')
-
-        console.log(util.inspect(this.twoWeeks, {showHidden: false, depth: null}))
     }
 }

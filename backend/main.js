@@ -1,8 +1,13 @@
 WheelofFate = require('./models')
 var wof = new WheelofFate()
-wof.allocateTwoWeeks()
-var schedule = wof.twoWeeks
-console.log(schedule)
+wof.allocateSpan()
+var schedule = wof.span
+
+
+const util = require('util')
+
+console.log(util.inspect(schedule, {showHidden: false, depth: null}))
+
 
 const express = require('express')
 var cors = require('cors')
