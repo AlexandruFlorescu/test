@@ -5,13 +5,14 @@ var schedule = wof.twoWeeks;
 console.log(schedule);
 
 const express = require('express')
+var cors = require('cors')
 const app = express()
-const port = 3000
+app.use(cors())
+const port = 3001
 
 const router = express.Router();
 
 app.get('/', (req, res, next) => {
-    console.log(schedule);
     res.status(200).send(schedule)
 });
 
